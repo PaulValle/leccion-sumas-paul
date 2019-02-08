@@ -1,5 +1,7 @@
 package com.example.redes.leccionfinalpaul;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,7 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,9 +54,17 @@ public class MainActivity extends AppCompatActivity {
                         Toast toast1 =
                                 Toast.makeText(getApplicationContext(),
                                         "Respuesta Correcta, Aciertos:" + aciertos+ " Fallas: "+ fallas, Toast.LENGTH_SHORT);
-                        //toast1.show();
+                        toast1.show();
                         mediaplayer.start();
-                        creaNotificacion(0,"Notificación Android!","Como llamar a una alerta o notificación para el usuario en la aplicación de Android?", "http://es.stackoverflow.com", getApplicationContext());
+
+                        NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                        Notification notify=new Notification.Builder
+                                (getApplicationContext()).setContentTitle("Aciertos").setContentText("Acertas te a la respuesta").
+                                setContentTitle("Aciertos").setSmallIcon(R.drawable.acierto).build();
+
+                        notify.flags |= Notification.FLAG_AUTO_CANCEL;
+                        notif.notify(0, notify);
+
                     }else{
                         intentos++;
                         fallas++;
@@ -60,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),
                                         "Respuesta Incorrecta, Aciertos:" + aciertos+ " Fallas: "+ fallas, Toast.LENGTH_SHORT);
                         toast1.show();
+                        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                        if (vibrator.hasVibrator()) {
+                            vibrator.vibrate(500); // for 500 ms
+                        }
                     }
                 }else{
                     //intent
@@ -74,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             }
-
 
         });
     }
